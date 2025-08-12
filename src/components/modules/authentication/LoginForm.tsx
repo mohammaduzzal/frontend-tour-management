@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Link, useNavigate } from "react-router"
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import Password from "@/components/ui/Password"
 import { useLoginMutation} from "@/redux/features/auth/auth.api"
 import { toast } from "sonner"
+import { config } from "@/config"
 
 
 
@@ -23,14 +25,23 @@ export function LoginForm({
     try {
       const result = await login(data).unwrap()
 
-      console.log(result)
-      toast.success("login  successful!!!")
+      if(result.success){
+        navigate("/")
+        toast.success("login  successful!!!")
+      }
       
-    } catch (error) {
+      
+    } catch (error :any) {
       console.error(error)
-       if(error.status === 401){
+
+      if(error.data.message === "password does not match"){
+        toast.error("invalid credentials")
+      }
+
+
+       if(error.data.message === "user not verified"){
         toast.error("your account is not verified")
-        navigate("/verify", {state : {email : data.email}})
+        navigate("/verify", {state : data.email})
       }
       
     }
@@ -78,7 +89,7 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Password {...field}/>
+                    <Password {...field} autoComplete="current-password"/>
                   </FormControl>
                   <FormDescription className="sr-only">
                     This is your public display name.
@@ -98,7 +109,9 @@ export function LoginForm({
             Or continue with
           </span>
         </div>
-        <Button variant="outline" className="w-full cursor-pointer">
+        <Button
+        onClick={()=> window.open(`${config.baseUrl}/auth/google`)}
+        variant="outline" className="w-full cursor-pointer">
           Login with Google
         </Button>
       </div>
