@@ -89,7 +89,7 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Password {...field} autoComplete="current-password"/>
+                    <Password {...field}/>
                   </FormControl>
                   <FormDescription className="sr-only">
                     This is your public display name.
