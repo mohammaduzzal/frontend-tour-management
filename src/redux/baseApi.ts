@@ -8,5 +8,5 @@ export const baseApi = createApi({
     endpoints:()=>({
 
     }),
-    tagTypes : ["User","TourType"]
+    tagTypes : ["User","TourType","Division","Tour"]
 })

@@ -20,47 +20,47 @@ import z from "zod"
 
 
 const tourTypeSchema = z.object({
-    name : z.string()
+  name: z.string()
 })
 
 
 export function AddTourTypeModal() {
-    const form = useForm<z.infer<typeof tourTypeSchema>>({
-        resolver : zodResolver(tourTypeSchema),
-        defaultValues : {
-            name : ""
-        }
-    })
-    const [addTourType] = useAddTourTypeMutation()
-    const [open, setOpen] = useState(false)
-
-
-
-
-    const onSubmit = async(data : z.infer<typeof tourTypeSchema>)=>{
-
-     const res = await addTourType({name : data.name}).unwrap()
-
-     if(res.success){
-        toast.success("tour type added successfully")
-        setOpen(false)
-     }
+  const form = useForm<z.infer<typeof tourTypeSchema>>({
+    resolver: zodResolver(tourTypeSchema),
+    defaultValues: {
+      name: ""
     }
+  })
+  const [addTourType] = useAddTourTypeMutation()
+  const [open, setOpen] = useState(false)
+
+
+
+
+  const onSubmit = async (data: z.infer<typeof tourTypeSchema>) => {
+
+    const res = await addTourType({ name: data.name }).unwrap()
+
+    if (res.success) {
+      toast.success("tour type added successfully")
+      setOpen(false)
+    }
+  }
 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <form>
-        <DialogTrigger asChild>
-          <Button>Add Tour Types</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add Tour Type</DialogTitle>
-          </DialogHeader>
+
+      <DialogTrigger asChild>
+        <Button>Add Tour Types</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add Tour Type</DialogTitle>
+        </DialogHeader>
         <Form {...form}>
-            <form id="type-id" onSubmit={form.handleSubmit(onSubmit)}>
-                 <FormField
+          <form id="type-id" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -73,16 +73,16 @@ export function AddTourTypeModal() {
                 </FormItem>
               )}
             />
-            </form>
+          </form>
         </Form>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button form="type-id" type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button form="type-id" type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+
     </Dialog>
   )
 }

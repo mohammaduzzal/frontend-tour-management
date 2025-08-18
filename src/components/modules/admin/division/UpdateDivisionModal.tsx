@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useUpdateTourTypeMutation } from "@/redux/features/tour/tour.api"
+import { useUpdateDivisionMutation } from "@/redux/features/division/division.api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Pencil } from "lucide-react"
 import { useState } from "react"
@@ -19,36 +19,36 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
 
-interface UpdateTourTypeModalProps {
-  tourTypeId: string;
+interface UpdateDivisionModalProps {
+  divisionId: string;
   defaultName: string;
 }
 
 
-const tourTypeSchema = z.object({
+const divisionSchema = z.object({
     name: z.string()
 })
 
 
-export function UpdateTourTypeModal({tourTypeId,defaultName} : UpdateTourTypeModalProps) {
-    const form = useForm<z.infer<typeof tourTypeSchema>>({
-        resolver: zodResolver(tourTypeSchema),
+export function UpdateDivisionModal({divisionId,defaultName} : UpdateDivisionModalProps) {
+    const form = useForm<z.infer<typeof divisionSchema>>({
+        resolver: zodResolver(divisionSchema),
         defaultValues: {
             name: defaultName ||""
         }
     })
 
     const [open, setOpen] = useState(false)
-    const [updateTourType] = useUpdateTourTypeMutation()
+    const [updateDivision] = useUpdateDivisionMutation()
 
 
 
 
-    const onSubmit = async (formData: z.infer<typeof tourTypeSchema>) => {
+    const onSubmit = async (formData: z.infer<typeof divisionSchema>) => {
         
-        const res =await updateTourType({tourTypeId, payload: {name : formData.name}}).unwrap()
+        const res =await updateDivision({divisionId, payload: {name : formData.name}}).unwrap()
         if(res.success){
-            toast.success("division updated successfully")
+            toast.success("tour type updated successfully")
             setOpen(false)
         }
     }
@@ -62,7 +62,7 @@ export function UpdateTourTypeModal({tourTypeId,defaultName} : UpdateTourTypeMod
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Update Division</DialogTitle>
+                        <DialogTitle>Update Tour Type</DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
                         <form id="type-id" onSubmit={form.handleSubmit(onSubmit)}>
