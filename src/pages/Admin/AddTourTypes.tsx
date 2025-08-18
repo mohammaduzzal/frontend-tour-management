@@ -1,3 +1,4 @@
+import { DeleteConfirmation } from "@/components/DeleteConfirmation"
 import { AddTourTypeModal } from "@/components/modules/admin/tourType/AddTourTypeModal"
 import { UpdateTourTypeModal } from "@/components/modules/admin/tourType/UpdateTourTypeModal"
 import { Button } from "@/components/ui/button"
@@ -10,19 +11,20 @@ export default function AddTourTypes() {
   const { data } = useGetTourTypeQuery(undefined)
   const [deleteTourType] = useDeleteTourTypeMutation()
 
-  const handleTourTypeDelete = (tourTypeId: string) => {
-    toast("Are you sure you want to delete this tour type?", {
-      action: {
-        label: "Yes, Delete",
-        onClick: async () => {
-          const res = await deleteTourType(tourTypeId).unwrap()
-          if (res.success) {
-            toast.success("tour type deleted successfully")
-          }
-        }
-      }
-    })
+  
 
+  const handleTourTypeDelete = async(tourTypeId: string) => {
+    const toastId = toast.loading("removing")
+         try {
+           const res = await deleteTourType(tourTypeId).unwrap()
+          if (res.success) {
+            toast.success("tour type deleted successfully", {id :toastId}  )
+          }
+          
+         } catch (error) {
+          console.error(error)
+         }
+        
   }
 
 
@@ -45,7 +47,11 @@ export default function AddTourTypes() {
             {data?.data?.map((item: { name: string, _id: string }) => (
               <TableRow key={item._id}>
                 <TableCell className="font-medium w-full">{item?.name}</TableCell>
-                <TableCell><Button onClick={() => handleTourTypeDelete(item._id)} size="sm"><Trash2 /></Button></TableCell>
+                <TableCell>
+                  <DeleteConfirmation  onConfirm={() => handleTourTypeDelete(item._id)}>
+                    <Button size="sm"><Trash2 /></Button>
+                  </DeleteConfirmation>
+                </TableCell>
                 <TableCell><UpdateTourTypeModal tourTypeId={item._id} defaultName={item.name}/></TableCell>
               </TableRow>
             ))}
